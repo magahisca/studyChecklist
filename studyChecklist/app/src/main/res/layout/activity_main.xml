@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <CheckBox android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id ="@+id/checkbox1"
+              android:text = "Domain 1: Programming, Logic, and Analysis"
+              android:textSize="20sp"
+              android:padding = "16dp"/>
+    <CheckBox android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/checkbox2"
+              android:text="Domain 2: Databases"
+              android:textSize="20sp"
+              android:padding="16dp"/>
+    <CheckBox android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id ="@+id/checkbox3"
+              android:text = "Domain 3: Information Security"
+              android:textSize="20sp"
+              android:padding = "16dp"/>
+    <CheckBox android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id ="@+id/checkbox4"
+              android:text = "Domain 4: Operating Systems and Systems Design"
+              android:textSize="20sp"
+              android:padding = "16dp"/>
+    <CheckBox android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id ="@+id/checkbox5"
+              android:text = "Domain 5: Networking"
+              android:textSize="20sp"
+              android:padding = "16dp"/>
+    <CheckBox android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id ="@+id/checkbox6"
+              android:text = "Domain 6: Cloud and IT Infrastructure"
+              android:textSize="20sp"
+              android:padding = "16dp"/>
+</LinearLayout>
