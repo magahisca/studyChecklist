@@ -91,9 +91,12 @@ fun ShopScreenPreview() {
     }
 }
 */
+
+val defaultPetType = PetType("Dog")
 data class Pet(
     var health: Int = 100,
-    val maxHealth: Int = 100
+    val maxHealth: Int = 100,
+    val type: PetType = defaultPetType
 )
 
 data class GameState(
@@ -101,21 +104,32 @@ data class GameState(
     val coins: Int = 0,
     val playerLevel: Int = 1,
     val currentExp: Int = 0,
-    val reqExp: Int = 10
-
+    val reqExp: Int = 10,
+    val hasSelectedPet: Boolean = false
 )
 @Composable
 fun PetGame (){
     var gameState by remember {mutableStateOf(GameState())}
     var openShop by remember{mutableStateOf(false) }
-    LaunchedEffect(Unit){
-        while(true){
+    var petSelected by remember{mutableStateOf(false)}
+
+    if(!petSelected){
+        PetSelection(onPetSelected = { selectedType ->
+            val newPet = Pet(type = selectedType)
+            gameState = gameState.copy(pet = newPet)
+            petSelected = true
+        })
+    }
+if(petSelected) {
+    LaunchedEffect(Unit) {
+        while (true) {
             delay(5000)
-            if (gameState.pet.health > 0 ){
-                gameState = gameState.copy (pet = gameState.pet.copy( health = gameState.pet.health - 1))
+            if (gameState.pet.health > 0) {
+                gameState = gameState.copy(pet = gameState.pet.copy(health = gameState.pet.health - 1))
             }
         }
     }
+}
     Column(
         horizontalAlignment =  Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -130,7 +144,8 @@ fun PetGame (){
         Text("Pet Health: ${gameState.pet.health}", style = MaterialTheme.typography.headlineMedium)
 
         Spacer(modifier = Modifier.height(20.dp))
-
+        Text("${gameState.pet.type.typeName}", style = MaterialTheme.typography.headlineMedium)
+        Spacer(modifier = Modifier.height(20.dp))
         Button(onClick = {
             if (gameState.pet.health < gameState.pet.maxHealth) {
                 gameState = gameState.copy(pet = gameState.pet.copy(health = (gameState.pet.health + 10).coerceAtMost(gameState.pet.maxHealth)))
