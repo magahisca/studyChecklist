@@ -93,10 +93,12 @@ fun ShopScreenPreview() {
 */
 
 val defaultPetType = PetType("Dog")
+val startingPetState = "Fair"
 data class Pet(
-    var health: Int = 100,
+    var health: Int = 50,
     val maxHealth: Int = 100,
-    val type: PetType = defaultPetType
+    val type: PetType = defaultPetType,
+    val petState:String = startingPetState
 )
 
 data class GameState(
@@ -106,6 +108,7 @@ data class GameState(
     val currentExp: Int = 0,
     val reqExp: Int = 10,
     val hasSelectedPet: Boolean = false
+
 )
 @Composable
 fun PetGame (){
@@ -126,6 +129,21 @@ if(petSelected) {
             delay(5000)
             if (gameState.pet.health > 0) {
                 gameState = gameState.copy(pet = gameState.pet.copy(health = gameState.pet.health - 1))
+                if (gameState.pet.health in 0..19){
+                    gameState = gameState.copy(pet = gameState.pet.copy(petState = "Very Poor"))
+                }
+                if (gameState.pet.health in 20..40){
+                    gameState = gameState.copy(pet = gameState.pet.copy(petState = "Poor"))
+                }
+                if (gameState.pet.health in 41..59){
+                    gameState = gameState.copy(pet = gameState.pet.copy(petState = "Fair"))
+                }
+                if (gameState.pet.health in 60..89){
+                    gameState = gameState.copy(pet = gameState.pet.copy(petState = "Good"))
+                }
+                if (gameState.pet.health in 90..100){
+                    gameState = gameState.copy(pet = gameState.pet.copy(petState = "Very Good"))
+                }
             }
         }
     }
@@ -142,7 +160,8 @@ if(petSelected) {
         Text("Exp: ${gameState.currentExp}/ ${gameState.reqExp}",style = MaterialTheme.typography.headlineMedium )
         Spacer(modifier = Modifier.height(50.dp))
         Text("Pet Health: ${gameState.pet.health}", style = MaterialTheme.typography.headlineMedium)
-
+        Spacer(modifier = Modifier.height(20.dp))
+        Text("Pet Health: ${gameState.pet.petState}", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(20.dp))
         Text("${gameState.pet.type.typeName}", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(20.dp))
@@ -157,7 +176,7 @@ if(petSelected) {
                 gameState = gameState.copy(reqExp = gameState.reqExp * gameState.playerLevel)
             }
         }) {
-            Text("Toothbrush 💖")
+            Text("Toothbrush")
         }
 
         Button(onClick = {openShop = true}){Text("\uD83D\uDED2 Shop")}

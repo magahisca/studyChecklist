@@ -18,7 +18,10 @@ data class PetType(
 val petOptions = listOf(
     PetType("Dog"),
     PetType("Cat"),
-    PetType("Bug")
+    PetType("Bug"),
+    PetType("Bird"),
+    PetType("Turtle"),
+    PetType("Bunny")
 
 )
 
