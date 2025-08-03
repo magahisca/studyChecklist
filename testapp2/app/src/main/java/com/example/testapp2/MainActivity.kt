@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.testapp2.ui.theme.Testapp2Theme
 import kotlinx.coroutines.delay
+import java.time.LocalTime
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +44,7 @@ data class ShopItem(
 val shopItems = listOf(
     ShopItem(1,"Hat", 5, "isHat") ,
     ShopItem(2 ,"Jacket", 5, "isClothes")
+    //to add: more items and add terrain
 )
 @Composable
 fun ShopScreen(coins: Int,onBuy:(Int) -> Unit ,onClose: () -> Unit) {
