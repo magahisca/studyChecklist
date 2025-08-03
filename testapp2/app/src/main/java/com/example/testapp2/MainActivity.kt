@@ -14,12 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role.Companion.Button
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.testapp2.ui.theme.Testapp2Theme
 import kotlinx.coroutines.delay
-import java.time.LocalTime
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,8 +95,8 @@ fun ShopScreenPreview() {
 val defaultPetType = PetType("Dog")
 val startingPetState = "Fair"
 data class Pet(
-    var health: Int = 50,
-    val maxHealth: Int = 100,
+    var health: Double = 50.00,
+    val maxHealth: Double = 100.00,
     val type: PetType = defaultPetType,
     val petState:String = startingPetState
 )
@@ -112,11 +110,60 @@ data class GameState(
     val hasSelectedPet: Boolean = false
 
 )
+
+
+
 @Composable
 fun PetGame (){
     var gameState by remember {mutableStateOf(GameState())}
     var openShop by remember{mutableStateOf(false) }
     var petSelected by remember{mutableStateOf(false)}
+    var brushCheck by remember{ mutableStateOf(brushCheck())}
+
+fun brushFunction(){
+    if (gameState.pet.health < gameState.pet.maxHealth && gameState.pet.health > 92.00) {
+        gameState = gameState.copy(
+            pet = gameState.pet.copy(
+                health = (gameState.pet.health + 1).coerceAtMost(gameState.pet.maxHealth)
+            )
+        )
+        gameState = gameState.copy(coins = gameState.coins + 5)
+        gameState = gameState.copy(currentExp = gameState.currentExp + (5 + (gameState.playerLevel - 0)))
+    }
+    else if (gameState.pet.health in 89.0..92.0) {
+        gameState = gameState.copy(
+            pet = gameState.pet.copy(
+                health = (gameState.pet.health + 2).coerceAtMost(gameState.pet.maxHealth)
+            )
+        )
+        gameState = gameState.copy(coins = gameState.coins + 5)
+        gameState = gameState.copy(currentExp = gameState.currentExp + (5 + (gameState.playerLevel - 0)))
+    }
+    else if (gameState.pet.health in 75.0..88.0) {
+        gameState = gameState.copy(
+            pet = gameState.pet.copy(
+                health = (gameState.pet.health + 3).coerceAtMost(gameState.pet.maxHealth)
+            )
+        )
+        gameState = gameState.copy(coins = gameState.coins + 5)
+        gameState = gameState.copy(currentExp = gameState.currentExp + (5 + (gameState.playerLevel - 0)))
+    }
+    else if (gameState.pet.health in 0.0..74.0) {
+        gameState = gameState.copy(
+            pet = gameState.pet.copy(
+                health = (gameState.pet.health + 5).coerceAtMost(gameState.pet.maxHealth)
+            )
+        )
+        gameState = gameState.copy(coins = gameState.coins + 5)
+        gameState = gameState.copy(currentExp = gameState.currentExp + (5 + (gameState.playerLevel - 0)))
+    }
+
+    if (gameState.currentExp >= gameState.reqExp) {
+        gameState = gameState.copy(playerLevel = gameState.playerLevel + 1)
+        gameState = gameState.copy(reqExp = gameState.reqExp * gameState.playerLevel)
+    }
+}
+
 
     if(!petSelected){
         PetSelection(onPetSelected = { selectedType ->
@@ -128,22 +175,22 @@ fun PetGame (){
 if(petSelected) {
     LaunchedEffect(Unit) {
         while (true) {
-            delay(5000)
+            delay(250)
             if (gameState.pet.health > 0) {
-                gameState = gameState.copy(pet = gameState.pet.copy(health = gameState.pet.health - 1))
-                if (gameState.pet.health in 0..19){
+                gameState = gameState.copy(pet = gameState.pet.copy(health = gameState.pet.health - 0.00008))
+                if (gameState.pet.health in 0.00..19.00){
                     gameState = gameState.copy(pet = gameState.pet.copy(petState = "Very Poor"))
                 }
-                if (gameState.pet.health in 20..40){
+                if (gameState.pet.health in 20.00..40.00){
                     gameState = gameState.copy(pet = gameState.pet.copy(petState = "Poor"))
                 }
-                if (gameState.pet.health in 41..59){
+                if (gameState.pet.health in 41.00..59.00){
                     gameState = gameState.copy(pet = gameState.pet.copy(petState = "Fair"))
                 }
-                if (gameState.pet.health in 60..89){
+                if (gameState.pet.health in 60.00..89.00){
                     gameState = gameState.copy(pet = gameState.pet.copy(petState = "Good"))
                 }
-                if (gameState.pet.health in 90..100){
+                if (gameState.pet.health in 90.00..100.00){
                     gameState = gameState.copy(pet = gameState.pet.copy(petState = "Very Good"))
                 }
             }
@@ -167,17 +214,24 @@ if(petSelected) {
         Spacer(modifier = Modifier.height(20.dp))
         Text("${gameState.pet.type.typeName}", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(20.dp))
+
         Button(onClick = {
-            if (gameState.pet.health < gameState.pet.maxHealth) {
-                gameState = gameState.copy(pet = gameState.pet.copy(health = (gameState.pet.health + 10).coerceAtMost(gameState.pet.maxHealth)))
-                gameState = gameState.copy(coins = gameState.coins + 5)
-                gameState = gameState.copy(currentExp = gameState.currentExp + (5 + (gameState.playerLevel - 0)))
+            if (isBrushTimeMorning || isBrushTimeNight) {
+
+                if(isBrushTimeMorning){
+                    if(brushCheck.morningCheck){return@Button}
+                    brushFunction()
+                    brushCheck.morningCheck = true
+
+                }
+                if (isBrushTimeNight){
+                    if(brushCheck.nightCheck){return@Button}
+                    brushFunction()
+                    brushCheck.nightCheck = true}
+
             }
-            if (gameState.currentExp >= gameState.reqExp){
-                gameState = gameState.copy(playerLevel = gameState.playerLevel +1)
-                gameState = gameState.copy(reqExp = gameState.reqExp * gameState.playerLevel)
-            }
-        }) {
+        }
+        ) {
             Text("Toothbrush")
         }
 
